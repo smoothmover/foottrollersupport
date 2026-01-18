@@ -1,1 +1,3 @@
-unity script to access foottroller data through local network, and sample project
+Unity script to access foottroller data through local network.
+Use FoottrollerNet.cs to get Foottroller control and data from a Foottroller hub.
+FoottrollerCtrl.cs is an example of how to use control and data from FoottrolerNet.cs for movement control
