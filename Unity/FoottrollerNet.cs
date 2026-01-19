@@ -19,8 +19,11 @@ public class FoottrollerNet : MonoBehaviour
     public string serverip;
     public static FoottrollerNet instance = null;
     public string localIPs;
+    public string localNetAddr;
     public int senderport=0;
     public int listenport;
+    public bool udpportavailableflag;
+    public bool portavailableflag;
     float broadcastMs, prebroadcastMs;
     public float udpheartbeatMs;
     float udpidleMs;
@@ -51,7 +54,7 @@ public class FoottrollerNet : MonoBehaviour
 
     private byte[] udpBufsend;
     private int udpData_len;
-    bool reinitudpflag;
+    public bool reinitudpflag;
     private int reinitcnt;
 	public float joystick_x;
 	public float joystick_y;
@@ -96,7 +99,9 @@ public class FoottrollerNet : MonoBehaviour
         udpConnReady = false;
         ipdix = 0;
         localIPs = LocalIPAddress();
-        localIPs = localIPs + "255";
+        int lastDotIndex = localIPs.LastIndexOf('.');
+        localNetAddr = localIPs.Substring(0, lastDotIndex+1);
+        // localIPs = localIPs + "255";
         init();
         init_S();
         ipdix = 0;
@@ -170,11 +175,12 @@ public class FoottrollerNet : MonoBehaviour
                     udpBufsend[1] = 2;            // connection type 2
                     udpData_len = 2;
                     // Den message zum Remote-Client senden.
-                    localIPs = LocalIPAddress();
+                    // localIPs = LocalIPAddress();
                     string scanip="";
                     for (int idx = 1; idx <= 254; idx++) { 
                         int temp = idx;
-                        scanip = localIPs + temp.ToString();
+                        scanip = localNetAddr + temp.ToString();
+                        // scanip = "192.168.0.33";
                         broadcastEndPoint = new IPEndPoint(IPAddress.Parse(scanip), port_S);
                         client_S.Send(udpBufsend, udpData_len, broadcastEndPoint);
                         // Debug.Log("101 message sent: " + scanip);
@@ -269,7 +275,7 @@ public class FoottrollerNet : MonoBehaviour
             // udpConnReady = false;
         }
 
-        float temp_val = FoottrollerCtrl.instance.control_angle; // / 1.57f;
+        float temp_val = 0; // FoottrollerCtrl.instance.control_angle; // / 1.57f;
         if (temp_val > 1)
         {
             temp_val = 1;
@@ -292,27 +298,27 @@ public class FoottrollerNet : MonoBehaviour
         Byte1Data = (byte) tempval;
 
         tempval = 0;
-        if (FoottrollerCtrl.instance.btnA)
+        if (false)//FoottrollerCtrl.instance.btnA)
         {
             tempval = tempval + 1;
         }
-        if (FoottrollerCtrl.instance.btnB)
+        if (false)//FoottrollerCtrl.instance.btnB)
         {
             tempval = tempval + 2;
         }
-        if (FoottrollerCtrl.instance.btnX)
+        if (false)//FoottrollerCtrl.instance.btnX)
         {
             tempval = tempval + 4;
         }
-        if (FoottrollerCtrl.instance.btnY)
+        if (false)//FoottrollerCtrl.instance.btnY)
         {
             tempval = tempval + 8;
         }
-        if (FoottrollerCtrl.instance.triggerL)         // left triger value
+        if (false)//FoottrollerCtrl.instance.triggerL)         // left triger value
         {
             tempval = tempval + 16;
         }
-        if (FoottrollerCtrl.instance.triggerR)          // right trigger value
+        if (false)//FoottrollerCtrl.instance.triggerR)          // right trigger value
         {
             tempval = tempval + 32;
         }else if (tempval < 0) {
@@ -320,7 +326,7 @@ public class FoottrollerNet : MonoBehaviour
         }
         Byte2Data = (byte)tempval;
         byte Byte3Data;
-        tempval = (int)Mathf.Floor(FoottrollerCtrl.instance.triggerL_value * 255);
+        tempval = 0; // (int)Mathf.Floor(FoottrollerCtrl.instance.triggerL_value * 255);
         if (tempval > 255)
         {
             tempval = 255;
@@ -331,7 +337,7 @@ public class FoottrollerNet : MonoBehaviour
         }
         Byte3Data =  (byte)tempval;
         // byte Byte4Data;
-        tempval = (int)Mathf.Floor(FoottrollerCtrl.instance.triggerR_value * 255);
+        tempval = 0;//  (int)Mathf.Floor(FoottrollerCtrl.instance.triggerR_value * 255);
         if (tempval > 255)
         {
             tempval = 255;
@@ -342,7 +348,7 @@ public class FoottrollerNet : MonoBehaviour
         }
         Byte4Data = (byte)tempval;
         byte Byte5Data;
-        tempval = (int)Mathf.Floor(FoottrollerCtrl.instance.joystick_RH.x * 128 + 128f);
+        tempval = 0;// (int)Mathf.Floor(FoottrollerCtrl.instance.joystick_RH.x * 128 + 128f);
         if (tempval > 255)
         {
             tempval = 255;
@@ -353,7 +359,7 @@ public class FoottrollerNet : MonoBehaviour
         }
         Byte5Data = (byte)tempval;
         byte Byte6Data;
-        tempval = (int)Mathf.Floor(FoottrollerCtrl.instance.joystick_RH.y * 128 + 128f);
+        tempval = 0;// (int)Mathf.Floor(FoottrollerCtrl.instance.joystick_RH.y * 128 + 128f);
         if (tempval > 255)
         {
             tempval = 255;
@@ -364,7 +370,7 @@ public class FoottrollerNet : MonoBehaviour
         }
         Byte6Data = (byte)tempval;
         byte Byte7Data;
-        tempval = (int)Mathf.Floor(FoottrollerCtrl.instance.joystick_LH.x * 128 + 128f);
+        tempval = 0;// (int)Mathf.Floor(FoottrollerCtrl.instance.joystick_LH.x * 128 + 128f);
         if (tempval > 255) { 
             tempval = 255;
         }else if (tempval < 0) {
@@ -372,7 +378,7 @@ public class FoottrollerNet : MonoBehaviour
         }
         Byte7Data = (byte)tempval;
         byte Byte8Data;
-        tempval = (int)Mathf.Floor(FoottrollerCtrl.instance.joystick_LH.y * 128 + 128f);
+        tempval = 0; // (int)Mathf.Floor(FoottrollerCtrl.instance.joystick_LH.y * 128 + 128f);
         if (tempval > 255)
         {
             tempval = 255;
@@ -478,8 +484,8 @@ public class FoottrollerNet : MonoBehaviour
         client = new UdpClient();
         client.Client.Bind(localEndpoint);
         listenport = ((IPEndPoint)(client.Client.LocalEndPoint)).Port;
-        senderport = listenport-1;
-
+        senderport = listenport - 1;
+        
         receiveThread = new Thread(
             new ThreadStart(ReceiveData));
         receiveThread.IsBackground = true;
@@ -591,7 +597,7 @@ public class FoottrollerNet : MonoBehaviour
 
         // define
         IP_S = "192.168.1.255";
-        IP_S = localIPs;
+        IP_S = localNetAddr+"255";
         port_S = 45041; //  12309;
 
         // ----------------------------
@@ -600,8 +606,25 @@ public class FoottrollerNet : MonoBehaviour
         remoteEndPoint = new IPEndPoint(IPAddress.Parse(IP_S), port_S);
         broadcastEndPoint = new IPEndPoint(IPAddress.Parse(IP_S), port_S);
         //client_S = new UdpClient();
+
+        while (true) { // initialize receiver and sender ports until an avaliable port combination is found
+            reinit();
+            if (udpportavailableflag) {
+                break;
+            }
+        }
+
+        /*
+        try
+        {
+            client_S = new UdpClient(senderport);
+            udpportavailableflag = true;
+        }
+        catch (SocketException ex) {
+            udpportavailableflag = false;
+        }
+        */
         
-        client_S = new UdpClient(senderport);
         
 
         //sendString("udp test");
@@ -627,7 +650,16 @@ public class FoottrollerNet : MonoBehaviour
         if (client_S != null) {
             client_S.Close();
         }
-        client_S = new UdpClient(senderport);
+        // client_S = new UdpClient(senderport);
+        try
+        {
+            client_S = new UdpClient(senderport);
+            udpportavailableflag = true;
+        }
+        catch (SocketException ex)
+        {
+            udpportavailableflag = false;
+        }
     }
     // sendData
     private void sendString(string message)
