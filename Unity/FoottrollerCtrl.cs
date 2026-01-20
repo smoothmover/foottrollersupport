@@ -14,7 +14,7 @@ public class FoottrollerCtrl : MonoBehaviour
     public float heading_LF = 0.0f;
     private GameObject mainCam = null;
     private Vector3 campos;
-    private float headsetheading;
+    public float headsetheading;
     public float joystick_x, joystick_y;
     private int movState;
     private float movSpeed;
@@ -52,7 +52,9 @@ public class FoottrollerCtrl : MonoBehaviour
     void Start()
     {
         mainCam = GameObject.Find("Main Camera");
-        CalibRef.action.started += FoottrollerCalib;
+        if (CalibRef != null) {
+            CalibRef.action.started += FoottrollerCalib;
+        }
         movState = 0;
         movSpeed = 0f;
         forwardmark = GameObject.Find("forwardmark");
@@ -63,13 +65,24 @@ public class FoottrollerCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        upndownctrl = UpnDownRef.action.ReadValue<float>();
+        if (UpnDownRef != null)
+        {
+            upndownctrl = UpnDownRef.action.ReadValue<float>();
+        }
+        else {
+            upndownctrl = 0.0f;
+        }
+        
 
         if (FoottrollerNet.instance.udpConnReady)
         {
             joystick_x = FoottrollerNet.instance.joystick_x;
             joystick_y = FoottrollerNet.instance.joystick_y;
             heading_RF = FoottrollerNet.instance.RFheading - 180.0f;
+        }
+        else {
+            joystick_x = 0f;
+            joystick_y = 0f;
         }
         
         
@@ -151,6 +164,8 @@ public class FoottrollerCtrl : MonoBehaviour
         temppos = transform.position;
         Vector3 move = transform.forward;
 
+
+
         float fwd_x = move.x;
         float fwd_z = move.z;
 
@@ -168,7 +183,10 @@ public class FoottrollerCtrl : MonoBehaviour
             temppos.y = temppos.y + upndownctrl * Time.deltaTime;
         }
 
+
         transform.position = temppos;
+
+
         Vector3 centerpos = temppos;
         //centerpos.x = centerpos.x + campos.x;
         //centerpos.z = centerpos.z + campos.z;
@@ -176,9 +194,9 @@ public class FoottrollerCtrl : MonoBehaviour
 
         if (centermark != null)
         {
-            Vector3 temppos2 = centerpos;
-            temppos2.y = temppos.y;
-            centermark.transform.position = temppos2;
+            // Vector3 temppos2 = centerpos;
+            // temppos2.y = temppos.y;
+            centermark.transform.position = temppos; // temppos2;
         }
 
         if (forwardmark != null)
@@ -192,6 +210,9 @@ public class FoottrollerCtrl : MonoBehaviour
             ballpos.y = centerpos.y;
             forwardmark.transform.position = ballpos;
         }
+
+       //  return;
+
     }
 
     // utility funtions
@@ -222,7 +243,9 @@ public class FoottrollerCtrl : MonoBehaviour
     {
         // https://www.youtube.com/watch?v=jOn0YWoNFVY
         Debug.Log("Calib Button pressed");
-        refheadsetheading_cali = headsetheading;
+        float bias = 130f; // Suppose to be zerio, but in different games, this bias may need to be adjusted to compensate a difference between headset direction and movement direction,
+        // such that when calibration button is pressed, the forward movement direction (indicated by the marker) aligns with the current looking direction.
+        refheadsetheading_cali = headsetheading - bias;
         //refheadingRF_cali = FoottrollerNet.instance.RFheading;
         refheadingRF_cali = headingRF_cur;
     }
