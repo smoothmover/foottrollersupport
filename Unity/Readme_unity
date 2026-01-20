@@ -3,3 +3,7 @@ Use FoottrollerNet.cs to get Foottroller control and data from a Foottroller hub
 FoottrollerCtrl.cs is an example of using the control and data from FoottrolerNet.cs for movement control.
 A sample VR game for Unity is provided, which uses the two scripts to achieve natural VR movement control with Foottroller.
 https://github.com/smoothmover/foottrollersupport/releases/tag/UnitySampleGame
+
+Unity sample project video instruction:
+https://youtu.be/-4Q4KPRiLC4
+
