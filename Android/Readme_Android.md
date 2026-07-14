@@ -1,5 +1,4 @@
 Android Foottroller hub APK
 Pair foottroller with an Android phone, and run this program to visualize and distribute Foottroller control and data.
 
-Download and instructions:
-https://github.com/smoothmover/foottrollersupport/releases/tag/v1.1
+[Download and instructions](https://github.com/smoothmover/foottrollersupport/releases/tag/v1.1)
