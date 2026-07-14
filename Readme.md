@@ -1,5 +1,5 @@
 Foottroller is a new HID for natural VR locomotion and game control with user Foot actions.
-www.foottroller.com
+(www.foottroller.com)
 This git has the software and code supporting the following Foottroller use cases.
 1. Connect Foottroller to a Windows PC and use it for movement control in steamVR games.
 2. Conenct Foottroller to a Windows PC and use the Foottroller hub software to send Foottroller control and data to games/applications through a local network.
